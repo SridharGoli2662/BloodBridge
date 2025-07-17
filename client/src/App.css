@@ -1,0 +1,25 @@
+* {
+  margin: 0;
+  box-sizing: border-box;
+}
+
+/*.............. Navbar........................ */
+.navbar {
+  background-color: #fddad4;
+  display: flex;
+  align-items: center;
+}
+.nav-left {
+  width: 30vw;
+}
+.nav-right {
+  li {
+    text-decoration: none;
+    list-style: none;
+    font-weight: 700;
+    color: #ec2420;
+  }
+  display: flex;
+  justify-content: space-around;
+  width: 70vw;
+}
