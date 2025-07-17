@@ -1,0 +1,56 @@
+import mongoose from "mongoose";
+const UserRequest=new mongoose.Schema({
+    Gender:{
+        type:String,
+        required:true
+    },
+      Page:{
+        type:String,
+        required:true
+    },
+      Pname:{
+        type:String,
+        required:true
+    },
+     Pincode:{
+        type:Number,
+        required:true
+    },
+      HospitalState:{
+        type:String,
+        required:true
+    },
+      Landmark:{
+        type:String,
+        required:true
+    },
+      HospitalCity:{
+        type:String,
+        required:true
+    },
+      HospitalName:{
+        type:String,
+        required:true
+    },
+      RequirementUrgency:{
+        type:String,
+        required:true
+    },
+      DiseaseSufferingFrom:{
+        type:String,
+        required:true
+    },
+      RequiredBloodGroup:{
+        type:String,
+        required:true
+    },
+      AlternateMobile:{
+        type:Number,
+        required:true
+    },
+      AttenderMobile:{
+        type:Number,
+        required:true
+    },
+})
+export default mongoose.model("UserRequest",UserRequest)
