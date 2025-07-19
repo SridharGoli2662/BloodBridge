@@ -18,7 +18,7 @@ export default function Login() {
                 // setformdata(values);
                 // console.log(formdata)
                 try{
-                  const response=await axios.post("http://localhost:4000/user/login",values)
+                  const response=await axios.post("http://localhost:4000/user/login",values,{withCredentials:true})
                   console.log(response)
                 }catch(err)
                 {

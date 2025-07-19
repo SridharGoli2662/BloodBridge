@@ -4,9 +4,12 @@ import axios from "axios";
 
 export default function Emergency()
 {
-    useEffect(async()=>{
-        const response= await axios.get('http://localhost:4000/request/6873c69b41a8f0a25c110416')
-        console.log(response)
+    useEffect(()=>{
+        async function fetchdata() {
+            const response= await axios.get('http://localhost:4000/request',{withCredentials:true})
+            console.log(response)
+        }
+        fetchdata()
     },[])
     return(
         <>

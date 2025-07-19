@@ -23,9 +23,10 @@ export default function Navbar() {
           <Link to="/user">
             <li>User</li>
           </Link>
-          <Link to='/emergency'>
+          <Link to="/emergency">
             <li>Emergency</li>
           </Link>
+          
         </div>
       </div>
     </>

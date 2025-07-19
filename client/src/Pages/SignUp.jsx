@@ -18,7 +18,7 @@ export default function SignUp() {
               },
               onSubmit:async(values)=>{
                   try{
-                    const res=await axios.post("http://localhost:4000/user/signup",values)
+                    const res=await axios.post("http://localhost:4000/user/signup",values,{withCredentials:true})
                     console.log(res)
                     // console.log(values)
                     console.log("data sent sucessfully")
