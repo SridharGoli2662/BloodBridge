@@ -1,7 +1,6 @@
 import express from "express";
 import mongoose from "mongoose";
 import userdata from "../model/Signup.js"
-import cookieParser from "cookie-parser";
 import jwt from "jsonwebtoken"
 import bcrypt from "bcrypt";
 import UserRequest from "../model/UserRequest.js";
@@ -10,7 +9,6 @@ const UserRoutes=express.Router();
 UserRoutes.post("/user/login",async(req,res,next)=>{
     //res.send("this is login api")
     try{
-    
       const{Email,Password}=req.body;
       const userexist=await userdata.findOne({Email:Email});
     //checking either the password is correct
@@ -26,8 +24,10 @@ UserRoutes.post("/user/login",async(req,res,next)=>{
         }
       //creation of jwt token
     const token=jwt.sign({Email:Email},"BloodApp")
+    // console.log(token)
     //setting cookie
-     res.cookie("cookiename",token)
+     res.cookie("cookiename",token,{path:'/'})
+    //  console.log(req.cookies)
     res.send("cookie set sucess")
     }catch(err)
     {
@@ -53,7 +53,11 @@ UserRoutes.post("/user/signup",async(req,res,next)=>{
     //use save method to insert data
 
 })
-UserRoutes.post("/user/request",async(req,res,next)=>{
+UserRoutes.post("/user/request",(req,res,next)=>{
+    console.log("this is middle ware while request raising")
+    console.log(req.cookies)
+    next();
+},async(req,res,next)=>{
   // console.log(req.body)
   try{
      //getting all the donars list to send notification
