@@ -2,8 +2,10 @@ import axios from "axios";
 import { ErrorMessage, useFormik } from "formik";
 import { useEffect, useState } from "react";
 import * as yup from "yup";
+import { ToastContainer, toast } from 'react-toastify';
 import Navbar from "../Components/Navbar";
 export default function Login() {
+  const[loading,setLoading]=useState(false);
   //connecting to server
   const [formdata, setformdata] = useState();
   // useEffect(async()=>{
@@ -14,7 +16,12 @@ export default function Login() {
       Email: "",
       Password: "",
     },
+    validationSchema:yup.object({
+      Email:yup.string("Invalid Email").required("Email Is Required"),
+      Password:yup.string().required("Enter Password")
+    }),
     onSubmit: async (values) => {
+      setLoading(true)
       // setformdata(values);
       // console.log(formdata)
       try {
@@ -23,9 +30,13 @@ export default function Login() {
           values,
           { withCredentials: true }
         );
-        console.log(response);
+        // console.log(response.data);
+        toast.success(response.data)
+        setLoading(false)
       } catch (err) {
-        console.log(err.message);
+        setLoading(false)
+        toast.error(err.response.data)
+        // console.log(err.response.data)
       }
     },
   });
@@ -57,10 +68,13 @@ export default function Login() {
                 type="text"
                 id="Email"
                 name="Email"
-                className="border border-gray-400 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 bg-white"
+                className={`${formik.touched.Email && formik.errors.Email?"border border-red-500":"border border-gray-400"} text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 bg-white`}
                 placeholder="sample@gmail.com"
                 onChange={formik.handleChange}
               />
+               {formik.touched.Email && formik.errors.Email &&(
+                <div className="text-sm text-red-500">{formik.errors.Email}</div>
+              )}
             </div>
             <div>
               <label
@@ -74,15 +88,19 @@ export default function Login() {
                 id="Password"
                 name="Password"
                 onChange={formik.handleChange}
-                className="border border-gray-400 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 bg-white"
+                className={`${formik.touched.Password && formik.errors.Password?"border border-red-500":"border border-gray-400"} text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 bg-white`}
               />
+              {formik.touched.Password && formik.errors.Password &&(
+                <div className="text-sm text-red-500">{formik.errors.Password}</div>
+              )}
             </div>
             <div>
               <button
                 type="submit"
                 className="border rounded-md block mx-auto text-white border-gray-400 bg-red-500 p-2 hover:bg-red-800 transition-colors"
+              disabled={!loading?false:true}
               >
-                Login
+               {!loading?"Login":"Loading....."}
               </button>
             </div>
           </div>

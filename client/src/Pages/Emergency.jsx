@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import Navbar from "../Components/Navbar";
 import axios from "axios";
-
+import { useNavigate } from "react-router-dom";
 export default function Emergency() {
+  const navigate=useNavigate()
   const [requests, setRequests] = useState([
     {
       id: 1,
@@ -33,13 +34,19 @@ export default function Emergency() {
     },
   ]);
 
+  async function fetchdata() {
+    try{
+      const response = await axios.get('http://localhost:4000/request', { withCredentials: true });
+      // setRequests(response.data);
+    }catch(err)
+    {
+      console.log(err.message)
+        navigate('/login')     
+    }
+  }
   useEffect(() => {
     // Example: fetch real data from backend
-    // async function fetchdata() {
-    //   const response = await axios.get('http://localhost:4000/request', { withCredentials: true });
-    //   setRequests(response.data);
-    // }
-    // fetchdata();
+    fetchdata();
   }, []);
 
   return (
@@ -53,7 +60,7 @@ export default function Emergency() {
           Emergency Blood Requirements
         </h1>
         <div className="w-full max-w-4xl grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {requests.map((req) => (
+          {requests?.map((req) => (
             <div
               key={req.id}
               className="bg-white border border-gray-400 rounded-lg shadow-md p-6 flex flex-col justify-between text-black"

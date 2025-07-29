@@ -2,10 +2,15 @@ import React, { useEffect } from "react";
 import logo from "../assets/BloodBridgeLogo.png";
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
+import axios from "axios";
 
 export default function Navbar() {
   const location = useLocation();
-
+async function logout()
+{
+  const response=await axios.get('http://localhost:4000/user/logout',{withCredentials:true})
+  console.log(response);
+}
   useEffect(() => {
     const hash = location.hash;
     if (hash) {
@@ -46,6 +51,9 @@ export default function Navbar() {
             to="/emergency"
           >
             <li>Emergency</li>
+          </Link>
+          <Link className="hover:bg-[#e89492] p-1.5 rounded-[10px]" to='/'>
+            <li onClick={logout}>Logout</li>
           </Link>
         </div>
       </div>

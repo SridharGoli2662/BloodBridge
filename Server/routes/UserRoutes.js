@@ -5,6 +5,7 @@ import jwt from "jsonwebtoken"
 import bcrypt from "bcrypt";
 import UserRequest from "../model/UserRequest.js";
 import ActiveRequest from "../model/ActiveRequest.js";
+import Auth from "../middleware/Authentication.js";
 const UserRoutes=express.Router();
 UserRoutes.post("/user/login",async(req,res,next)=>{
     //res.send("this is login api")
@@ -17,33 +18,38 @@ UserRoutes.post("/user/login",async(req,res,next)=>{
         throw new Error("No user Found!!")
       }
       const isCorrectPassword=await bcrypt.compare(Password,userexist.Password);
-      console.log(isCorrectPassword)
       if(!isCorrectPassword)
         {
           throw new Error("Invaid Password!...")
         }
       //creation of jwt token
     const token=jwt.sign({Email:Email},"BloodApp")
-    // console.log(token)
     //setting cookie
      res.cookie("cookiename",token,{path:'/'})
     //  console.log(req.cookies)
-    res.send("cookie set sucess")
+    res.status(200).send("Login Sucess......")
     }catch(err)
     {
-        res.status(404).send(err.message);
+        res.status(400).send(err.message);
+        // res.send(err.message)
     }
 })
 UserRoutes.post("/user/signup",async(req,res,next)=>{
     try{
+      //ensure  email and mobileNum Should be Unique
+        const duplicateUser=await userdata.findOne({Email:req.body.Email}) 
+      if(duplicateUser)
+      {
+          throw new Error("User Already Exists")
+      }
         //getting password from userdata
         const{Password}=req.body;
         //using bcrypt hash the password
         const crypted=await bcrypt.hash(Password,10);
         req.body.Password=crypted;
         const newdb=new userdata(req.body)
-        await newdb.save();  
-        res.send("data inserted into database!....")  
+        await newdb.save(); 
+        res.send("UserSignUp Sucess.....")
     }catch(err)
     {
         res.status(404).send(err.message)
@@ -53,11 +59,7 @@ UserRoutes.post("/user/signup",async(req,res,next)=>{
     //use save method to insert data
 
 })
-UserRoutes.post("/user/request",(req,res,next)=>{
-    console.log("this is middle ware while request raising")
-    console.log(req.cookies)
-    next();
-},async(req,res,next)=>{
+UserRoutes.post("/user/request",Auth,async(req,res,next)=>{
   // console.log(req.body)
   try{
      //getting all the donars list to send notification
@@ -79,5 +81,14 @@ UserRoutes.post("/user/request",(req,res,next)=>{
   {
       res.status(404).send(err.message)
   }
+})
+UserRoutes.get('/user/request',Auth,(req,res)=>{
+    res.send(req.userInfo)
+})
+UserRoutes.get('/user/logout',(req,res,next)=>{
+    //clear cookies
+    res.clearCookie('cookiename')
+    //send respose as logged out]
+    res.status(200).send("user loged out sucess")
 })
 export default UserRoutes;

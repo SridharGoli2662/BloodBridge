@@ -3,28 +3,66 @@ import { useFormik } from "formik";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import Navbar from "../Components/Navbar";
+import * as yup from "yup";
+import { useNavigate } from "react-router-dom";
 export default function RequestForm() {
-  const [formdata, setdata] = useState();
-  // useEffect(async()=>{
-  //   const resp=await axios.get("user/request")
-  //   console.log(resp)
-  // })
+  const [userInfo, setuserInfo] = useState();
+  const navigate=useNavigate();
+  async function getUserInfo()
+  {
+    try{
+      const userInfoRes=await axios.get("http://localhost:4000/user/request",{withCredentials:true})
+      if(userInfoRes==false)
+      {
+        throw new Error("no user loged in")
+      }
+    }
+    catch(err)
+    {
+      console.log(err.message)
+      setTimeout(() => {
+        navigate('/login')
+      }, 3000);
+      // console.log("user is ")
+    }
+      // console.log(userInfo.data)
+      // setuserInfo(userInfoRes.data)
+      // console.log(userInfoRes)
+  }
+  useEffect(()=>{
+      getUserInfo();
+  })
   const formik = useFormik({
     initialValues: {
-      Gender: "",
-      Page: "",
-      Pname: "",
-      HospitalState: "",
-      Landmark: "",
-      HospitalCity: "",
-      HospitalName: "",
-      RequirementUrgency: "",
-      DiseaseSufferingFrom: "",
-      RequiredBloodGroup: "",
-      AlternateMobile: "",
-      AttenderMobile: "",
-      Pincode: "",
+      pName: "",
+      pAge: "",
+      gender: "",
+      attenderMobile: "",
+      alternateMobile: "",
+      requiredBloodGroup: "",
+      diseaseSufferingFrom: "",
+      hospitalState: "",
+      landMark: "",
+      hospitalCity: "",
+      hospitalName: "",
+      requirementUrgency: "",
+      pincode: "",
     },
+    validationSchema:yup.object({
+          pName:yup.string().required("Enter Patient Name"),
+          pAge:yup.number().required("Enter patient Age"),
+          gender: yup.string().required("Enter Your Gender"),
+          attenderMobile: yup.number("Number Should Not Be Text").required("Enter MobileNumber"),
+          alternateMobile: yup.number(),
+          requiredBloodGroup: yup.string().required("Enter requredBloodGroup"),
+          diseaseSufferingFrom: yup.string().required(),
+          hospitalState: yup.string().required("HospitalState is Required"),
+          landMark:yup.string(),
+          hospitalName: yup.string().required("HospitalName  is Required"),
+          hospitalCity:yup.string().required("HospitalCity is Required"),
+          requirementUrgency:yup.string().required("Enter requirementUrgency "),
+          pincode:yup.number().required("Enter Pincode "),
+        }),
     onSubmit: async (values) => {
       try {
         const res = await axios.post(
@@ -73,9 +111,19 @@ export default function RequestForm() {
                   <input
                     onChange={formik.handleChange}
                     id="Pname"
-                    className="border border-gray-400 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 bg-white"
+                    name="pName"
+                    className={`${
+                      formik.touched.Email && formik.errors.Email
+                        ? "border border-red-500"
+                        : "border border-gray-400"
+                    } text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 bg-white`}
                     type="text"
-                  />
+                    />
+                    {formik.touched.pName && formik.errors.pName && (
+                      <div className="text-sm text-red-500">
+                        {formik.errors.pName}
+                      </div>
+                    )}
                 </div>
                 <div>
                   <label
@@ -87,9 +135,19 @@ export default function RequestForm() {
                   <input
                     onChange={formik.handleChange}
                     id="Page"
-                    className="border border-gray-400 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 bg-white"
+                    name="pAge"
+                    className={`${
+                      formik.touched.pAge && formik.errors.pAge
+                        ? "border border-red-500"
+                        : "border border-gray-400"
+                    } text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 bg-white`}
                     type="text"
                   />
+                 {formik.touched.pAge && formik.errors.pAge && (
+                    <div className="text-sm text-red-500">
+                      {formik.errors.pAge}
+                    </div>
+                  )}
                 </div>
                 <div>
                   <label
@@ -101,12 +159,23 @@ export default function RequestForm() {
                   <select
                     onChange={formik.handleChange}
                     id="Gender"
-                    className="border border-gray-400 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 bg-white"
+                    name="gender"
+                    className={`${
+                      formik.touched.gender && formik.errors.gender
+                        ? "border border-red-500"
+                        : "border border-gray-400"
+                    } text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 bg-white`}
                   >
+                   
                     <option value="Female">Female</option>
                     <option value="Male">Male</option>
                     <option value="others">Others</option>
                   </select>
+                    {formik.touched.gender && formik.errors.gender && (
+                    <div className="text-sm text-red-500">
+                      {formik.errors.gender}
+                    </div>
+                  )}
                 </div>
                 <div>
                   <label
@@ -118,9 +187,19 @@ export default function RequestForm() {
                   <input
                     onChange={formik.handleChange}
                     id="AttenderMobile"
-                    className="border border-gray-400 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 bg-white"
+                    name="attenderMobile"
+                    className={`${
+                      formik.touched.attenderMobile && formik.errors.attenderMobile
+                        ? "border border-red-500"
+                        : "border border-gray-400"
+                    } text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 bg-white`}
                     type="text"
                   />
+                 {formik.touched.attenderMobile && formik.errors.attenderMobile && (
+                    <div className="text-sm text-red-500">
+                      {formik.errors.attenderMobile}
+                    </div>
+                  )}
                 </div>
                 <div>
                   <label
@@ -132,9 +211,19 @@ export default function RequestForm() {
                   <input
                     onChange={formik.handleChange}
                     id="AlternateMobile"
-                    className="border border-gray-400 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 bg-white"
+                    name="alternateMobile"
+                    className={`${
+                      formik.touched.alternateMobile && formik.errors.alternateMobile
+                        ? "border border-red-500"
+                        : "border border-gray-400"
+                    } text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 bg-white`}
                     type="text"
                   />
+                 {formik.touched.alternateMobile && formik.errors.alternateMobile && (
+                    <div className="text-sm text-red-500">
+                      {formik.errors.alternateMobile}
+                    </div>
+                  )}
                 </div>
                 <div>
                   <label
@@ -145,44 +234,75 @@ export default function RequestForm() {
                   </label>
                   <select
                     id="RequiredBloodGroup"
+                    name="requiredBloodGroup"
                     onChange={formik.handleChange}
-                    className="border border-gray-400 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 bg-white"
+                    className={`${
+                      formik.touched.requiredBloodGroup && formik.errors.requiredBloodGroup
+                        ? "border border-red-500"
+                        : "border border-gray-400"
+                    } text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 bg-white`}
                   >
+                   
                     <option>A+</option>
                     <option>B+</option>
                     <option>O+</option>
                   </select>
+                    {formik.touched.requiredBloodGroup && formik.errors.requiredBloodGroup && (
+                    <div className="text-sm text-red-500">
+                      {formik.errors.requiredBloodGroup}
+                    </div>
+                  )}
                 </div>
                 <div>
                   <label
-                    htmlFor="DiseaseSufferingFrom"
+                    htmlFor="diseaseSufferingFrom"
                     className="block mb-2 text-sm font-medium text-black"
                   >
                     Disease Suffering From
                   </label>
                   <input
                     onChange={formik.handleChange}
-                    id="DiseaseSufferingFrom"
-                    className="border border-gray-400 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 bg-white"
+                    id="diseaseSufferingFrom"
+                    name="diseaseSufferingFrom"
+                    className={`${
+                      formik.touched.diseaseSufferingFrom && formik.errors.diseaseSufferingFrom
+                        ? "border border-red-500"
+                        : "border border-gray-400"
+                    } text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 bg-white`}
                     type="text"
                   />
+                 {formik.touched.diseaseSufferingFrom && formik.errors.diseaseSufferingFrom && (
+                    <div className="text-sm text-red-500">
+                      {formik.errors.diseaseSufferingFrom}
+                    </div>
+                  )}
                 </div>
                 <div>
                   <label
-                    htmlFor="RequirementUrgency"
+                    htmlFor="requirementUrgency"
                     className="block mb-2 text-sm font-medium text-black"
                   >
                     Requirement Urgency
                   </label>
                   <select
-                    id="RequirementUrgency"
+                    id="requirementUrgency"
+                    name="requirementUrgency"
                     onChange={formik.handleChange}
-                    className="border border-gray-400 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 bg-white"
+                    className={`${
+                      formik.touched.requirementUrgency && formik.errors.requirementUrgency
+                        ? "border border-red-500"
+                        : "border border-gray-400"
+                    } text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 bg-white`}
                   >
                     <option>Emergency Needed</option>
                     <option>1 day</option>
                     <option>2 days</option>
                   </select>
+                   {formik.touched.requirementUrgency && formik.errors.requirementUrgency && (
+                    <div className="text-sm text-red-500">
+                      {formik.errors.requirementUrgency}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -192,78 +312,130 @@ export default function RequestForm() {
             </legend>
             <div
               id="hospitalDetails"
+              name="hospitalDetails"
               className="border border-gray-400 rounded-lg p-4 mb-6"
             >
               <div className="grid gap-4 mb-2 md:grid-cols-2">
                 <div>
                   <label
-                    htmlFor="HospitalName"
+                    htmlFor="hospitalName"
                     className="block mb-2 text-sm font-medium text-black"
                   >
                     Hospital Name
                   </label>
                   <input
                     onChange={formik.handleChange}
-                    id="HospitalName"
-                    className="border border-gray-400 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 bg-white"
+                    id="hospitalName"
+                    name="hospitalName"
+                    className={`${
+                      formik.touched.Email && formik.errors.Email
+                        ? "border border-red-500"
+                        : "border border-gray-400"
+                    } text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 bg-white`}
                     type="text"
                   />
+                 {formik.touched.hospitalName && formik.errors.hospitalName && (
+                    <div className="text-sm text-red-500">
+                      {formik.errors.hospitalName}
+                    </div>
+                  )}
                 </div>
                 <div>
                   <label
-                    htmlFor="HospitalCity"
+                    htmlFor="hospitalCity"
                     className="block mb-2 text-sm font-medium text-black"
                   >
                     Hospital City
                   </label>
                   <input
                     onChange={formik.handleChange}
-                    id="HospitalCity"
-                    className="border border-gray-400 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 bg-white"
+                    id="hospitalCity"
+                    name="hospitalCity"
+                    className={`${
+                      formik.touched.Email && formik.errors.Email
+                        ? "border border-red-500"
+                        : "border border-gray-400"
+                    } text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 bg-white`}
                     type="text"
                   />
+                 {formik.touched.pName && formik.errors.pName && (
+                    <div className="text-sm text-red-500">
+                      {formik.errors.pName}
+                    </div>
+                  )}
                 </div>
                 <div>
                   <label
-                    htmlFor="Landmark"
+                    htmlFor="landMark"
                     className="block mb-2 text-sm font-medium text-black"
                   >
-                    Landmark
+                    LandMark
                   </label>
                   <input
                     onChange={formik.handleChange}
-                    id="Landmark"
-                    className="border border-gray-400 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 bg-white"
+                    id="landMark"
+                    name="landMark"
+                    className={`${
+                      formik.touched.landMark && formik.errors.landMark
+                        ? "border border-red-500"
+                        : "border border-gray-400"
+                    } text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 bg-white`}
                     type="text"
                   />
+                 {formik.touched.landMark && formik.errors.landMark && (
+                    <div className="text-sm text-red-500">
+                      {formik.errors.landMark}
+                    </div>
+                  )}
                 </div>
                 <div>
                   <label
-                    htmlFor="HospitalState"
+                    htmlFor="hospitalState"
+                    name="hospitalState"
                     className="block mb-2 text-sm font-medium text-black"
                   >
                     Hospital State
                   </label>
                   <input
                     onChange={formik.handleChange}
-                    id="HospitalState"
-                    className="border border-gray-400 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 bg-white"
+                    id="hospitalState"
+                    name="hospitalState"
+                    className={`${
+                      formik.touched.hospitalState && formik.errors.hospitalState
+                        ? "border border-red-500"
+                        : "border border-gray-400"
+                    } text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 bg-white`}
                     type="text"
                   />
+                 {formik.touched.hospitalState && formik.errors.hospitalState && (
+                    <div className="text-sm text-red-500">
+                      {formik.errors.hospitalState}
+                    </div>
+                  )}
                 </div>
                 <div>
                   <label
-                    htmlFor="Pincode"
+                    htmlFor="pincode"
                     className="block mb-2 text-sm font-medium text-black"
                   >
                     Pincode
                   </label>
                   <input
                     onChange={formik.handleChange}
-                    id="Pincode"
-                    className="border border-gray-400 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 bg-white"
+                    id="pincode"
+                    name="pincode"
+                    className={`${
+                      formik.touched.pincode && formik.errors.pincode
+                        ? "border border-red-500"
+                        : "border border-gray-400"
+                    } text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 bg-white`}
                     type="number"
                   />
+                   {formik.touched.pincode && formik.errors.pincode && (
+                    <div className="text-sm text-red-500">
+                      {formik.errors.pincode}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
