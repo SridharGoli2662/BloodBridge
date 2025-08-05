@@ -1,37 +1,37 @@
 import axios from "axios";
 import { useFormik } from "formik";
 import { useEffect, useState } from "react";
-import styled from "styled-components";
 import Navbar from "../Components/Navbar";
 import * as yup from "yup";
 import { useNavigate } from "react-router-dom";
 export default function RequestForm() {
   const [userInfo, setuserInfo] = useState();
-  const navigate=useNavigate();
-  async function getUserInfo()
-  {
-    try{
-      const userInfoRes=await axios.get("http://localhost:4000/user/request",{withCredentials:true})
-      if(userInfoRes==false)
-      {
-        throw new Error("no user loged in")
+  const navigate = useNavigate();
+  async function getUserInfo() {
+    try {
+      const userInfoRes = await axios.get(
+        "http://localhost:4000/user/request",
+        { withCredentials: true }
+      );
+      console.log(userInfoRes);
+      if (userInfoRes == false) {
+        console.log("user is loged in");
       }
-    }
-    catch(err)
-    {
-      console.log(err.message)
+    } catch (err) {
+      // console.log(err.message);
+      console.log(err.response.data);
       setTimeout(() => {
-        navigate('/login')
+        navigate("/login");
       }, 3000);
       // console.log("user is ")
     }
-      // console.log(userInfo.data)
-      // setuserInfo(userInfoRes.data)
-      // console.log(userInfoRes)
+    // console.log(userInfo.data)
+    // setuserInfo(userInfoRes.data)
+    // console.log(userInfoRes)
   }
-  useEffect(()=>{
-      getUserInfo();
-  })
+  useEffect(() => {
+    getUserInfo();
+  });
   const formik = useFormik({
     initialValues: {
       pName: "",
@@ -48,21 +48,23 @@ export default function RequestForm() {
       requirementUrgency: "",
       pincode: "",
     },
-    validationSchema:yup.object({
-          pName:yup.string().required("Enter Patient Name"),
-          pAge:yup.number().required("Enter patient Age"),
-          gender: yup.string().required("Enter Your Gender"),
-          attenderMobile: yup.number("Number Should Not Be Text").required("Enter MobileNumber"),
-          alternateMobile: yup.number(),
-          requiredBloodGroup: yup.string().required("Enter requredBloodGroup"),
-          diseaseSufferingFrom: yup.string().required(),
-          hospitalState: yup.string().required("HospitalState is Required"),
-          landMark:yup.string(),
-          hospitalName: yup.string().required("HospitalName  is Required"),
-          hospitalCity:yup.string().required("HospitalCity is Required"),
-          requirementUrgency:yup.string().required("Enter requirementUrgency "),
-          pincode:yup.number().required("Enter Pincode "),
-        }),
+    validationSchema: yup.object({
+      pName: yup.string().required("Enter Patient Name"),
+      pAge: yup.number().required("Enter patient Age"),
+      gender: yup.string().required("Enter Your Gender"),
+      attenderMobile: yup
+        .number("Number Should Not Be Text")
+        .required("Enter MobileNumber"),
+      alternateMobile: yup.number(),
+      requiredBloodGroup: yup.string().required("Enter requredBloodGroup"),
+      diseaseSufferingFrom: yup.string().required(),
+      hospitalState: yup.string().required("HospitalState is Required"),
+      landMark: yup.string(),
+      hospitalName: yup.string().required("HospitalName  is Required"),
+      hospitalCity: yup.string().required("HospitalCity is Required"),
+      requirementUrgency: yup.string().required("Enter requirementUrgency "),
+      pincode: yup.number().required("Enter Pincode "),
+    }),
     onSubmit: async (values) => {
       try {
         const res = await axios.post(
@@ -118,12 +120,12 @@ export default function RequestForm() {
                         : "border border-gray-400"
                     } text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 bg-white`}
                     type="text"
-                    />
-                    {formik.touched.pName && formik.errors.pName && (
-                      <div className="text-sm text-red-500">
-                        {formik.errors.pName}
-                      </div>
-                    )}
+                  />
+                  {formik.touched.pName && formik.errors.pName && (
+                    <div className="text-sm text-red-500">
+                      {formik.errors.pName}
+                    </div>
+                  )}
                 </div>
                 <div>
                   <label
@@ -143,7 +145,7 @@ export default function RequestForm() {
                     } text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 bg-white`}
                     type="text"
                   />
-                 {formik.touched.pAge && formik.errors.pAge && (
+                  {formik.touched.pAge && formik.errors.pAge && (
                     <div className="text-sm text-red-500">
                       {formik.errors.pAge}
                     </div>
@@ -166,12 +168,11 @@ export default function RequestForm() {
                         : "border border-gray-400"
                     } text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 bg-white`}
                   >
-                   
                     <option value="Female">Female</option>
                     <option value="Male">Male</option>
                     <option value="others">Others</option>
                   </select>
-                    {formik.touched.gender && formik.errors.gender && (
+                  {formik.touched.gender && formik.errors.gender && (
                     <div className="text-sm text-red-500">
                       {formik.errors.gender}
                     </div>
@@ -189,17 +190,19 @@ export default function RequestForm() {
                     id="AttenderMobile"
                     name="attenderMobile"
                     className={`${
-                      formik.touched.attenderMobile && formik.errors.attenderMobile
+                      formik.touched.attenderMobile &&
+                      formik.errors.attenderMobile
                         ? "border border-red-500"
                         : "border border-gray-400"
                     } text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 bg-white`}
                     type="text"
                   />
-                 {formik.touched.attenderMobile && formik.errors.attenderMobile && (
-                    <div className="text-sm text-red-500">
-                      {formik.errors.attenderMobile}
-                    </div>
-                  )}
+                  {formik.touched.attenderMobile &&
+                    formik.errors.attenderMobile && (
+                      <div className="text-sm text-red-500">
+                        {formik.errors.attenderMobile}
+                      </div>
+                    )}
                 </div>
                 <div>
                   <label
@@ -213,17 +216,19 @@ export default function RequestForm() {
                     id="AlternateMobile"
                     name="alternateMobile"
                     className={`${
-                      formik.touched.alternateMobile && formik.errors.alternateMobile
+                      formik.touched.alternateMobile &&
+                      formik.errors.alternateMobile
                         ? "border border-red-500"
                         : "border border-gray-400"
                     } text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 bg-white`}
                     type="text"
                   />
-                 {formik.touched.alternateMobile && formik.errors.alternateMobile && (
-                    <div className="text-sm text-red-500">
-                      {formik.errors.alternateMobile}
-                    </div>
-                  )}
+                  {formik.touched.alternateMobile &&
+                    formik.errors.alternateMobile && (
+                      <div className="text-sm text-red-500">
+                        {formik.errors.alternateMobile}
+                      </div>
+                    )}
                 </div>
                 <div>
                   <label
@@ -237,21 +242,22 @@ export default function RequestForm() {
                     name="requiredBloodGroup"
                     onChange={formik.handleChange}
                     className={`${
-                      formik.touched.requiredBloodGroup && formik.errors.requiredBloodGroup
+                      formik.touched.requiredBloodGroup &&
+                      formik.errors.requiredBloodGroup
                         ? "border border-red-500"
                         : "border border-gray-400"
                     } text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 bg-white`}
                   >
-                   
                     <option>A+</option>
                     <option>B+</option>
                     <option>O+</option>
                   </select>
-                    {formik.touched.requiredBloodGroup && formik.errors.requiredBloodGroup && (
-                    <div className="text-sm text-red-500">
-                      {formik.errors.requiredBloodGroup}
-                    </div>
-                  )}
+                  {formik.touched.requiredBloodGroup &&
+                    formik.errors.requiredBloodGroup && (
+                      <div className="text-sm text-red-500">
+                        {formik.errors.requiredBloodGroup}
+                      </div>
+                    )}
                 </div>
                 <div>
                   <label
@@ -265,17 +271,19 @@ export default function RequestForm() {
                     id="diseaseSufferingFrom"
                     name="diseaseSufferingFrom"
                     className={`${
-                      formik.touched.diseaseSufferingFrom && formik.errors.diseaseSufferingFrom
+                      formik.touched.diseaseSufferingFrom &&
+                      formik.errors.diseaseSufferingFrom
                         ? "border border-red-500"
                         : "border border-gray-400"
                     } text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 bg-white`}
                     type="text"
                   />
-                 {formik.touched.diseaseSufferingFrom && formik.errors.diseaseSufferingFrom && (
-                    <div className="text-sm text-red-500">
-                      {formik.errors.diseaseSufferingFrom}
-                    </div>
-                  )}
+                  {formik.touched.diseaseSufferingFrom &&
+                    formik.errors.diseaseSufferingFrom && (
+                      <div className="text-sm text-red-500">
+                        {formik.errors.diseaseSufferingFrom}
+                      </div>
+                    )}
                 </div>
                 <div>
                   <label
@@ -289,7 +297,8 @@ export default function RequestForm() {
                     name="requirementUrgency"
                     onChange={formik.handleChange}
                     className={`${
-                      formik.touched.requirementUrgency && formik.errors.requirementUrgency
+                      formik.touched.requirementUrgency &&
+                      formik.errors.requirementUrgency
                         ? "border border-red-500"
                         : "border border-gray-400"
                     } text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 bg-white`}
@@ -298,11 +307,12 @@ export default function RequestForm() {
                     <option>1 day</option>
                     <option>2 days</option>
                   </select>
-                   {formik.touched.requirementUrgency && formik.errors.requirementUrgency && (
-                    <div className="text-sm text-red-500">
-                      {formik.errors.requirementUrgency}
-                    </div>
-                  )}
+                  {formik.touched.requirementUrgency &&
+                    formik.errors.requirementUrgency && (
+                      <div className="text-sm text-red-500">
+                        {formik.errors.requirementUrgency}
+                      </div>
+                    )}
                 </div>
               </div>
             </div>
@@ -334,11 +344,12 @@ export default function RequestForm() {
                     } text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 bg-white`}
                     type="text"
                   />
-                 {formik.touched.hospitalName && formik.errors.hospitalName && (
-                    <div className="text-sm text-red-500">
-                      {formik.errors.hospitalName}
-                    </div>
-                  )}
+                  {formik.touched.hospitalName &&
+                    formik.errors.hospitalName && (
+                      <div className="text-sm text-red-500">
+                        {formik.errors.hospitalName}
+                      </div>
+                    )}
                 </div>
                 <div>
                   <label
@@ -358,7 +369,7 @@ export default function RequestForm() {
                     } text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 bg-white`}
                     type="text"
                   />
-                 {formik.touched.pName && formik.errors.pName && (
+                  {formik.touched.pName && formik.errors.pName && (
                     <div className="text-sm text-red-500">
                       {formik.errors.pName}
                     </div>
@@ -382,7 +393,7 @@ export default function RequestForm() {
                     } text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 bg-white`}
                     type="text"
                   />
-                 {formik.touched.landMark && formik.errors.landMark && (
+                  {formik.touched.landMark && formik.errors.landMark && (
                     <div className="text-sm text-red-500">
                       {formik.errors.landMark}
                     </div>
@@ -401,17 +412,19 @@ export default function RequestForm() {
                     id="hospitalState"
                     name="hospitalState"
                     className={`${
-                      formik.touched.hospitalState && formik.errors.hospitalState
+                      formik.touched.hospitalState &&
+                      formik.errors.hospitalState
                         ? "border border-red-500"
                         : "border border-gray-400"
                     } text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 bg-white`}
                     type="text"
                   />
-                 {formik.touched.hospitalState && formik.errors.hospitalState && (
-                    <div className="text-sm text-red-500">
-                      {formik.errors.hospitalState}
-                    </div>
-                  )}
+                  {formik.touched.hospitalState &&
+                    formik.errors.hospitalState && (
+                      <div className="text-sm text-red-500">
+                        {formik.errors.hospitalState}
+                      </div>
+                    )}
                 </div>
                 <div>
                   <label
@@ -431,7 +444,7 @@ export default function RequestForm() {
                     } text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 bg-white`}
                     type="number"
                   />
-                   {formik.touched.pincode && formik.errors.pincode && (
+                  {formik.touched.pincode && formik.errors.pincode && (
                     <div className="text-sm text-red-500">
                       {formik.errors.pincode}
                     </div>

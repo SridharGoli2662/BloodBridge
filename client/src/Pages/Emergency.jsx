@@ -3,7 +3,7 @@ import Navbar from "../Components/Navbar";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 export default function Emergency() {
-  const navigate=useNavigate()
+  const navigate = useNavigate();
   const [requests, setRequests] = useState([
     // asdfghjk
     {
@@ -36,13 +36,17 @@ export default function Emergency() {
   ]);
 
   async function fetchdata() {
-    try{
-      const response = await axios.get('http://localhost:4000/request', { withCredentials: true });
+    try {
+      const response = await axios.get("http://localhost:4000/request", {
+        withCredentials: true,
+      });
       // setRequests(response.data);
-    }catch(err)
-    {
-      console.log(err.message)
-        navigate('/login')     
+      if (response.data == true) {
+        throw new Error("No user loged in");
+      }
+    } catch (err) {
+      console.log(err.message);
+      navigate("/login");
     }
   }
   useEffect(() => {

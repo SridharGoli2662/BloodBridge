@@ -5,12 +5,34 @@ import { useLocation } from "react-router-dom";
 import axios from "axios";
 
 export default function Navbar() {
+  // async function toggleUserPage() {
+  //   // try {
+  //   //   const userInfo = await axios.get("http://localhost:4000/user/request", {
+  //   //     withCredentials: true,
+  //   //   });
+  //   //   console.log(userInfo);
+  //   //   if (userInfo == false) {
+  //   //     throw new Error("no user loged in");
+  //   //   }
+  //   // } catch (error) {
+  //   //   console.log(error.message);
+  //   // }
+  //   const userInfo = await axios.get("http://localhost:4000/user/request", {
+  //     withCredentials: true,
+  //   });
+  //   console.log(userInfo);
+  // }
+  // useEffect(() => {
+  //   toggleUserPage();
+  // });
+
   const location = useLocation();
-async function logout()
-{
-  const response=await axios.get('http://localhost:4000/user/logout',{withCredentials:true})
-  console.log(response);
-}
+  async function logout() {
+    const response = await axios.get("http://localhost:4000/user/logout", {
+      withCredentials: true,
+    });
+    console.log(response);
+  }
   useEffect(() => {
     const hash = location.hash;
     if (hash) {
@@ -43,17 +65,26 @@ async function logout()
           >
             <li>Request</li>
           </Link>
-          <Link className="hover:bg-[#e89492] p-1.5 rounded-[10px]" to="/user">
-            <li>User</li>
-          </Link>
           <Link
             className="hover:bg-[#e89492] p-1.5 rounded-[10px]"
             to="/emergency"
           >
             <li>Emergency</li>
           </Link>
-          <Link className="hover:bg-[#e89492] p-1.5 rounded-[10px]" to='/'>
+          <Link className="hover:bg-[#e89492] p-1.5 rounded-[10px]" to="/">
             <li onClick={logout}>Logout</li>
+          </Link>
+          <Link
+            className="hover:bg-[#e89492] p-1.5 rounded-[10px] flex items-center"
+            to="/userPage"
+          >
+            <li>
+              <img
+                src={logo}
+                alt="Profile"
+                className="w-8 h-8 rounded-full border-2 border-red-500 object-cover shadow-sm"
+              />
+            </li>
           </Link>
         </div>
       </div>
